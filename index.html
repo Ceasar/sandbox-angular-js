@@ -1,14 +1,31 @@
-<!doctype html>
-<html ng-app>
-  <head>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-rc.4/angular.min.js"></script>
-  </head>
-  <body>
-    <div>
-      <label>Name:</label>
-      <input type="text" ng-model="yourName" placeholder="Enter a name here">
-      <hr>
-      <h1>Hello {{yourName}}!</h1>
-    </div>
-  </body>
+<!DOCTYPE html>
+<html ng-app="myapp">
+    <head>
+        <title>AngularJS: UI-Router Quick Start</title>
+    </head>
+    <body>
+        <a ui-sref="route1">Route 1</a>
+        <div ui-view></div>        
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular.js"></script>
+        <script src="http://angular-ui.github.io/ui-router/release/angular-ui-router.js"></script>
+        <script>
+            var myapp = angular.module('myapp', ["ui.router"])
+            myapp.config(function($stateProvider, $urlRouterProvider){
+              // For any unmatched url, send to /route1
+              $urlRouterProvider.otherwise("/route1")
+              $stateProvider
+                .state('route1', {
+                    url: "/route1",
+                    templateUrl: "route1.html"
+                })
+                .state('route1.list', {
+                      url: "/list",
+                      templateUrl: "route1.list.html",
+                      controller: function($scope){
+                        $scope.items = ["A", "List", "Of", "Items"];
+                      }
+                  })
+            })
+        </script>
+    </body>
 </html>
