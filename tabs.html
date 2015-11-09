@@ -1,0 +1,61 @@
+<html lang="en" ng-app="demo">
+    <head>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0-beta.1/angular.min.js"></script>
+        <script>
+            angular.module('demo', [])
+            .directive('tab', function() {
+                return {
+                    link: function($scope, elem, $attrs, tabsetCtrl) {
+                        $scope.active = 'selected' in $attrs;
+                        tabsetCtrl.addTab($scope);
+                    },
+                    restrict: 'E',
+                    require: '^tabset',
+                    scope: {
+                        heading: '@',
+                    },
+                    template: '<div role="tabpanel" ng-show="active" ng-transclude></div>',
+                    transclude: true,
+                };
+            })
+            .directive('tabset', function() {
+                return {
+                    controller: function($scope) {
+                        $scope.tabs = [];
+                        $scope.select = function(selectedTab) {
+                            angular.forEach($scope.tabs, function(tab) {
+                                tab.active = false;
+                            });
+                            selectedTab.active = true;
+                        };
+                        this.addTab = function(scope) {
+                            $scope.tabs.push(scope);
+                        }
+                    },
+                    restrict: 'E',
+                    scope: {},
+                    templateUrl: 'tabset.html',
+                    transclude: true
+                };
+            });
+        </script>
+        <script type="text/ng-template" id="tabset.html">
+            <div role="tabpanel">
+                <ul class="nav nav-tabs" role="tablist">
+                    <li ng-repeat="tab in tabs" role="presentation">
+                        <a href="" ng-click="select(tab)" role="tab">{{tab.heading}}</a>
+                    </li>
+                </ul>
+                <div ng-transclude></div>
+            </div>
+        </script>
+    </head>
+    <body>
+        <tabset>
+            <tab heading="Tab 1" selected>Contents of Tab 1</tab>
+            <tab heading="Tab 2">Contents of Tab 2</tab>
+            <tab heading="Tab 3">Contents of Tab 3</tab>
+        </tabset>
+    </body>
+</html>
