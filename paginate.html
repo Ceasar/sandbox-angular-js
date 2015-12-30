@@ -1,0 +1,40 @@
+<html lang="en" ng-app="demo">
+    <head>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0-beta.1/angular.min.js"></script>
+        <script>
+            angular.module('demo', [])
+            .filter('paginate',  function() {
+              /**
+               * @param {Object} items[] - A list of items to paginate.
+               * @param {Object} pageCount - The number of pages to divide the
+               *                             items among.
+               * @returns {Object[]} - A list of *pageCount* lists containing
+               *                       them items in *items* in the order they
+               *                       were received.
+               */
+              return function(items, pageCount) {
+                var pages, pageSize, page, item, i, j;
+                pages = [];
+                pageSize = Math.round(items.length / pageCount);
+                for (i = 0; i < pageCount; i++) {
+                  page = [];
+                  for (j = 0; j < pageSize; j++) {
+                    item = items[i * pageSize + j];
+                    if (item != null) {
+                      page.push(item);
+                    }
+                  }
+                  pages.push(page);
+                }
+                return pages;
+              };
+            });
+        </script>
+    </head>
+    <body>
+      <ul class="page" ng-repeat="page in [1, 2, 3, 4, 5] | paginate:2">
+        <li ng-repeat="item in page">{{item}}</li>
+      </ul>
+    </body>
+</html>
