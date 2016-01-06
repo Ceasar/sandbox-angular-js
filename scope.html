@@ -1,0 +1,27 @@
+<html lang="en" ng-app="demo">
+    <head>
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0-beta.1/angular.min.js"></script>
+        <script>
+            angular.module('demo', [])
+            .directive('foo', function() {
+                return {
+                    controller: function($scope) {
+                        $scope.baz = "abc";
+                    },
+                    restrict: 'E',
+                    scope: {
+                        baz: '=?'
+                    },
+                    templateUrl: 'foo.html',
+                };
+            });
+        </script>
+        <script type="text/ng-template" id="foo.html">
+        </script>
+    </head>
+    <body>
+        <p>Child directives can modify the scope of their parents if their parents pass a name to a child directive.</p>
+        <foo baz="baz"></foo>
+        <p>baz is: {{baz}}</p>
+    </body>
+</html>
