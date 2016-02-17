@@ -1,0 +1,58 @@
+<!-- Custom version of multi-slot transclude -->
+<!doctype html>
+<html ng-app="demo">
+  <head>
+    <script src="bower_components/angular/angular.js"></script>
+    <script>
+      angular.module('demo', [])
+      .directive('multiTransclude', [function() {
+        return {
+          link: function($scope, $element, $attrs, controller, $transclude) {
+            if (!$transclude) {
+              throw new Error(
+                'Illegal use of ngTransclude directive in the template! ' +
+                'No parent directive that requires a transclusion found. '
+              );
+            }
+            $transclude(function(clone) {
+              // Find the child element in the transcluded contents that has a
+              // tag name that matches the value of 'multi-transclude'.
+              var multiTransclude = $attrs.$normalize($attrs.multiTransclude);
+              angular.forEach(clone, function(node) {
+                var el = angular.element(node)[0];
+                var nodeName = $attrs.$normalize(angular.lowercase(el.nodeName));
+                if (nodeName === multiTransclude) {
+                  $element.append(el);
+                }
+              });
+            });
+          }
+        };
+      }])
+      .directive('pane', [function() {
+        return {
+          templateUrl: 'multiButton.html',
+          transclude: true
+        };
+      }]);
+    </script>
+    <script type="text/ng-template" id="multiButton.html">
+      <button class="ng-multi-button">
+        <div>
+          <span multi-transclude="pane-title" class="title"></span>
+        </div>
+        <div>
+          <span multi-transclude="pane-body" class="hint"></span>
+        </div>
+      </button>
+    </script>
+  </head>
+  <body>
+    <input ng-model="title" aria-label="title"> <br/>
+    <textarea ng-model="text" aria-label="text"></textarea> <br/>
+    <pane>
+      <pane-title>{{title}}</pane-title>
+      <pane-body><p>{{text}}</p></pane-body>
+    </pane>
+  </body>
+</html>
