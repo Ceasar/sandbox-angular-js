@@ -1,0 +1,26 @@
+<!-- Filters cause controller to be reintialized. -->
+<!doctype html>
+<html ng-app="myApp">
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-rc.4/angular.min.js"></script>
+    <script>
+      angular.module('myApp', [])
+      .directive('hello', [function() {
+        return {
+          controller: [function() {
+            console.log('init');
+          }],
+          template: '<h1>Hello</h1>'
+        };
+      }]);
+    </script>
+  </head>
+  <body>
+    <div>
+      <label>Name:</label>
+      <input type="number" ng-model="count" placeholder="Enter a number here">
+      <hr>
+      <hello ng-repeat="x in [1, 2, 3, 4, 5] | limitTo:count"></hello>
+    </div>
+  </body>
+</html>
